@@ -10,8 +10,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 
-//const dbUrl = 'mongodb+srv://marfayaga:spel9n6heAtVw8wP@clusterhillel.s63wg.mongodb.net/?retryWrites=true&w=majority&appName=ClusterHillel';
-const dbUrl = 'mongodb://localhost:27017/mydatabase';
+const dbUrl = 'mongodb+srv://marfayaga:spel9n6heAtVw8wP@clusterhillel.s63wg.mongodb.net/?retryWrites=true&w=majority&appName=ClusterHillel';
+//const dbUrl = 'mongodb://localhost:27017/mydatabase';
 mongoose.connect(dbUrl);
 
 const db = mongoose.connection;
