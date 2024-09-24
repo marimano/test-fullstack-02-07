@@ -51,6 +51,9 @@ app.get('/users', async (req, res) => {
   }
 });
 
-app.listen({ port: 5555 }, () => {
+const port = process.env.PORT || 5555;
+const host = process.env.HOST || 'localhost';
+
+app.listen({ port, host }, () => {
   console.log('Fastify server started');
 });
