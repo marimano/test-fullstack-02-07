@@ -5,6 +5,9 @@ import { fileURLToPath } from 'url';
 import User from './users.mjs';
 import mongoose from 'mongoose';
 import Role from './roles.mjs';
+import cors from '@fastify/cors';
+import addRoles from './addRoles.mjs';
+import addUsers from './addUsers.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -25,13 +28,20 @@ db.once('open', () => {
 
 const app = fastify();
 
+app.register(cors);
+
 app.register(fastifyStatic, {
   root: path.join(__dirname, '../client')
 });
 
 app.get('/users', async (req, res) => {
   try {
-    const roles = await Role.find();
+    let roles = await Role.find();
+    if (!roles.length) {
+      await addRoles();
+      roles = await Role.find();
+    }
+
     let users = await User.find();
     if (!users.length) {
       await addUsers();
@@ -40,7 +50,7 @@ app.get('/users', async (req, res) => {
               
     const clientUsers = users.map(u => ({ 
       name: u.name, 
-      role: roles.find(r => r._id.toString() === u.roleId.toString()).role 
+      role: roles.find(r => r._id.toString() === u.roleId.toString())?.role 
     }));
 
     res.send(clientUsers);
@@ -52,7 +62,7 @@ app.get('/users', async (req, res) => {
 });
 
 const port = process.env.PORT || 5555;
-const host = process.env.HOST || 'localhost';
+const host = process.env.HOST || 'localhost'; // HOST 0.0.0.0
 
 app.listen({ port, host }, () => {
   console.log('Fastify server started');
